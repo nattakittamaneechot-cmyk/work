@@ -164,9 +164,9 @@ cart.forEach(item=>{
 document.getElementById("totalPrice").innerText =
   total.toLocaleString();
 
-/* วิธีชำระเงิน */
+/* หลักฐานการชำระเงิน */
 document.getElementById("paymentMethod").innerText =
-  order.payment || "โอนเงินผ่านธนาคาร";
+  order.payment || "สลีปธนาคาร";
 
 /* แสดงสลิป */
 if(order.slip){
