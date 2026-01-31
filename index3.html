@@ -6,88 +6,69 @@
   <title>ชำระเงิน</title>
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f6f7fb;
-      margin: 0;
-      padding: 15px;
-    }
+     {
+  box-sizing: border-box;
+}
 
-    h2 {
-      text-align: center;
-      margin-bottom: 15px;
-    }
+body {
+  margin: 0;
+  padding: 16px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont;
+  background: #f5f6fa;
+}
 
-    .card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 15px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    }
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
 
-    label {
-      font-size: 14px;
-      margin-top: 10px;
-      display: block;
-    }
+.payment-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 16px;
+  line-height: 1.4;
+  word-break: break-word;
+}
 
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      margin-top: 5px;
-      font-size: 14px;
-    }
+.payment-option span {
+  flex: 1;
+  white-space: normal; /* ⭐ สำคัญ */
+}
 
-    textarea {
-      resize: none;
-      height: 80px;
-    }
+input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
 
-    .radio-group {
-      margin-top: 10px;
-    }
+.total {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+  font-size: 16px;
+}
 
-    .radio-group label {
-      display: flex;
-      align-items: center;
-      margin-bottom: 8px;
-      font-size: 15px;
-    }
+button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+}
 
-    .radio-group input {
-      margin-right: 10px;
-    }
+.btn-confirm {
+  background: #4caf50;
+  color: #fff;
+  margin-bottom: 10px;
+}
 
-    .total {
-      display: flex;
-      justify-content: space-between;
-      font-size: 16px;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-
-    button {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 15px;
-    }
-
-    .confirm-btn {
-      background: #4CAF50;
-      color: #fff;
-    }
-
-    .back-btn {
-      background: #ccc;
-      color: #000;
-    }
+.btn-back {
+  background: #e0e0e0;
+}
   </style>
 </head>
 
@@ -107,27 +88,25 @@
   </div>
 
   <div class="card">
-    <h3>เลือกวิธีชำระเงิน</h3>
+  <h3>เลือกวิธีชำระเงิน</h3>
 
-    <div class="radio-group">
-      <label>
-        <input type="radio" name="payment" value="bank" checked>
-        โอนเงินผ่านธนาคาร
-      </label>
+  <label class="payment-option">
+    <input type="radio" name="payment" value="bank" checked>
+    <span>โอนเงินผ่านธนาคาร</span>
+  </label>
 
-      <label>
-        <input type="radio" name="payment" value="qr">
-        ชำระผ่าน QR Code
-      </label>
-    </div>
+  <label class="payment-option">
+    <input type="radio" name="payment" value="qr">
+    <span>ชำระผ่าน QR Code</span>
+  </label>
 
-    <div class="total">
-      <span>ยอดที่ต้องชำระ</span>
-      <span>฿<span id="totalPrice">0.00</span></span>
-    </div>
+  <div class="total">
+    ยอดที่ต้องชำระ
+    <strong id="totalPrice">฿0.00</strong>
   </div>
+</div>
 
-  <button class="confirm-btn" onclick="confirmPayment()">ยืนยันการชำระเงิน</button>
+ <button class="btn-confirm" onclick="confirmPayment()">  ยืนยันการชำระเงิน</button>
   <button class="back-btn" onclick="window.location.href='index2.html'">กลับไปหน้าตะกร้า</button>
 
   <script>
