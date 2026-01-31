@@ -2,194 +2,52 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
+<title>ใบเสร็จ</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ใบเสร็จรับเงิน</title>
 
 <style>
-body{
-  margin:0;
-  font-family:Tahoma, sans-serif;
-  background:#f3f3f3;
-}
-.container{
-  max-width:480px;
-  margin:auto;
-  padding:16px;
-}
-.card{
-  background:#fff;
-  border-radius:16px;
-  padding:16px;
-  margin-bottom:16px;
-}
-h2,h3{
-  text-align:center;
-  margin-top:0;
-}
-.row{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:8px;
-  font-size:14px;
-}
-.total{
-  font-size:18px;
-  font-weight:bold;
-}
-.status{
-  color:green;
-  font-weight:bold;
-}
-img{
-  width:100%;
-  border-radius:12px;
-  margin-top:10px;
-}
-button{
-  width:100%;
-  padding:14px;
-  font-size:16px;
-  border:none;
-  border-radius:12px;
-  background:#2ecc71;
-  color:#fff;
-}
+body{font-family:Arial;background:#f6f7fb;padding:20px}
+.box{background:#fff;max-width:480px;margin:auto;padding:20px;border-radius:12px}
+.row{display:flex;justify-content:space-between;margin:6px 0}
+button{width:100%;padding:14px;border:none;border-radius:10px;font-size:16px;margin-top:10px}
+.print{background:#2196F3;color:#fff}
+.finish{background:#4CAF50;color:#fff}
 </style>
 </head>
 
 <body>
-<div class="container">
 
-<h2>ใบเสร็จรับเงิน</h2>
+<div class="box">
+<h2 align="center">ใบเสร็จรับเงิน</h2>
 
-<!-- ข้อมูลคำสั่งซื้อ -->
-<div class="card">
-  <div class="row">
-    <span>เลขที่คำสั่งซื้อ</span>
-    <span id="orderId"></span>
-  </div>
-  <div class="row">
-    <span>วันที่ / เวลา</span>
-    <span id="orderDate"></span>
-  </div>
-  <div class="row">
-    <span>สถานะ</span>
-    <span class="status" id="orderStatus"></span>
-  </div>
-</div>
+<div id="info"></div>
 
-<!-- ข้อมูลลูกค้า -->
-<div class="card">
-  <h3>ข้อมูลลูกค้า</h3>
-  <div class="row">
-    <span>ชื่อ</span>
-    <span id="name"></span>
-  </div>
-  <div class="row">
-    <span>เบอร์โทร</span>
-    <span id="phone"></span>
-  </div>
-  <div class="row">
-    <span>ที่อยู่</span>
-    <span id="address"></span>
-  </div>
-</div>
-
-<!-- รายการสินค้า -->
-<div class="card">
-  <h3>รายการสินค้า</h3>
-  <div id="productList"></div>
-  <hr>
-  <div class="row total">
-    <span>ยอดรวมทั้งหมด</span>
-    <span>฿<span id="totalPrice"></span></span>
-  </div>
-</div>
-
-<!-- การชำระเงิน -->
-<div class="card">
-  <h3>การชำระเงิน</h3>
-  <div class="row">
-    <span>วิธีชำระเงิน</span>
-    <span id="paymentMethod"></span>
-  </div>
-  <img id="slipImage">
-</div>
-
-<button onclick="finishOrder()">เสร็จสิ้น</button>
-
+<button class="print" onclick="window.print()">พิมพ์ใบเสร็จ</button>
+<button class="finish" onclick="finish()">เสร็จสิ้น</button>
 </div>
 
 <script>
-/* ดึงข้อมูลจาก localStorage */
-const cart = JSON.parse(localStorage.getItem("cart")) || [];
-const order = JSON.parse(localStorage.getItem("orderInfo")) || {};
+const o=JSON.parse(localStorage.getItem("orderInfo"));
+if(!o){location.href="index1.html";}
 
-/* เลขคำสั่งซื้อ */
-const orderId = order.orderId || "ORD" + Date.now();
-document.getElementById("orderId").innerText = orderId;
+info.innerHTML=`
+<p><b>ชื่อลูกค้า:</b> ${o.name}</p>
+<p><b>เบอร์:</b> ${o.phone}</p>
+<p><b>ที่อยู่:</b> ${o.address}</p>
+<hr>
+<p><b>วิธีชำระ:</b> ${o.payment}</p>
+<p><b>สถานะ:</b> ${o.status}</p>
+<p><b>วันที่:</b> ${o.date}</p>
+<hr>
+<div class="row"><b>ยอดรวม</b><b>${Number(o.total).toFixed(2)} บาท</b></div>
+<img src="${o.slip}" style="width:100%;margin-top:10px">
+`;
 
-/* วันที่ */
-document.getElementById("orderDate").innerText =
-  new Date().toLocaleString("th-TH");
-
-/* สถานะ */
-document.getElementById("orderStatus").innerText =
-  order.status || "ชำระเงินเรียบร้อย";
-
-/* ข้อมูลลูกค้า */
-document.getElementById("name").innerText =
-  order.name || "-";
-document.getElementById("phone").innerText =
-  order.phone || "-";
-document.getElementById("address").innerText =
-  order.address || "-";
-
-/* รายการสินค้า */
-let total = 0;
-const productList = document.getElementById("productList");
-
-cart.forEach(item=>{
-  const sum = item.price * item.qty;
-  total += sum;
-
-  productList.innerHTML += `
-    <div class="row">
-      <span>${item.name} x ${item.qty}</span>
-      <span>฿${sum.toLocaleString()}</span>
-    </div>
-  `;
-});
-
-document.getElementById("totalPrice").innerText =
-  total.toLocaleString();
-
-/* หลักฐานการชำระเงิน */
-document.getElementById("paymentMethod").innerText =
-  order.payment || "สลีปธนาคาร";
-
-/* แสดงสลิป */
-if(order.slip){
-  document.getElementById("slipImage").src = order.slip;
-}
-
-/* ปุ่มเสร็จสิ้น */
-  function finishOrder(){
+function finish(){
   localStorage.clear();
-  alert("ขอบคุณสำหรับการสั่งซื้อค่ะ ");
-  window.location.href = "index1.html";
+  location.href="index1.html";
 }
 </script>
-<script>
-  // ดึงข้อมูลจาก localStorage
-  document.getElementById("name").innerText =
-    localStorage.getItem("customerName") || "-";
 
-  document.getElementById("phone").innerText =
-    localStorage.getItem("customerPhone") || "-";
-
-  document.getElementById("address").innerText =
-    localStorage.getItem("customerAddress") || "-";
-</script>
 </body>
 </html>
