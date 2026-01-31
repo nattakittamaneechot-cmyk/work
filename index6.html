@@ -33,11 +33,26 @@
 
     .qr-box {
       text-align: center;
+      margin-bottom: 16px;
     }
 
     .qr-box img {
       width: 100%;
       max-width: 260px;
+      border-radius: 12px;
+    }
+
+    .upload {
+      margin-top: 10px;
+    }
+
+    .upload input {
+      width: 100%;
+    }
+
+    .preview img {
+      width: 100%;
+      margin-top: 10px;
       border-radius: 12px;
     }
 
@@ -80,50 +95,80 @@
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <div class="card">
-      <h2>สแกน QR เพื่อชำระเงิน</h2>
+  <div class="card">
+    <h2>สแกน QR เพื่อชำระเงิน</h2>
 
-      <div class="qr-box">
-        <!-- ใส่รูป QR ของคุณตรง src -->
-        <img src="qr.png" alt="QR Code">
-      </div>
-
-      <div class="total">
-        <span>ยอดที่ต้องชำระ</span>
-        <span>฿<span id="totalPrice">0.00</span></span>
-      </div>
+    <div class="qr-box">
+      <!-- ใส่ QR ของร้าน -->
+      <img src="thai_qr_payment.png" alt="QR Code">
     </div>
 
-    <button class="btn-confirm" onclick="confirmPayment()">
-      ยืนยันการชำระเงิน
-    </button>
+    <div class="upload">
+      <label>แนบสลิปการโอนเงิน</label>
+      <input type="file" accept="image/*" onchange="uploadSlip(this)">
+    </div>
 
-    <button class="back-btn" onclick="window.location.href='index3.html'">
-      กลับไปหน้าเลือกวิธีชำระเงิน
-    </button>
+    <div class="preview" id="preview"></div>
 
+    <div class="total">
+      <span>ยอดที่ต้องชำระ</span>
+      <span>฿<span id="totalPrice">0.00</span></span>
+    </div>
   </div>
 
-  <script>
-    // แสดงยอดเงิน
-    document.getElementById("totalPrice").innerText =
-      Number(localStorage.getItem("totalPrice") || 0).toFixed(2);
+  <button class="btn-confirm" onclick="confirmPayment()">
+    ยืนยันการชำระเงิน
+  </button>
 
-    function confirmPayment() {
-      let order = JSON.parse(localStorage.getItem("orderInfo")) || {};
+  <button class="back-btn" onclick="window.location.href='index3.html'">
+    กลับไปหน้าเลือกวิธีชำระเงิน
+  </button>
 
-      order.paymentMethod = "qr";
-      order.paymentStatus = "paid";
-      order.orderDate = new Date().toLocaleString("th-TH");
+</div>
 
-      localStorage.setItem("orderInfo", JSON.stringify(order));
+<script>
+  let slipBase64 = "";
 
-      // 👉 เด้งไปหน้าใบเสร็จทันที
-      window.location.href = "index7.html";
+  // แสดงยอดเงิน
+  document.getElementById("totalPrice").innerText =
+    Number(localStorage.getItem("totalPrice") || 0).toFixed(2);
+
+  // อัปโหลดสลิป
+  function uploadSlip(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      slipBase64 = e.target.result;
+      document.getElementById("preview").innerHTML =
+        `<img src="${slipBase64}">`;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ยืนยันการชำระเงิน
+  function confirmPayment() {
+    if (!slipBase64) {
+      alert("กรุณาแนบสลิปก่อนยืนยันการชำระเงิน");
+      return;
     }
-  </script>
+
+    let order = JSON.parse(localStorage.getItem("orderInfo")) || {};
+
+    order.paymentMethod = "qr";
+    order.paymentStatus = "ชำระเงินเรียบร้อย";
+    order.slip = slipBase64;
+    order.orderDate = new Date().toLocaleString("th-TH");
+
+    localStorage.setItem("orderInfo", JSON.stringify(order));
+
+    // 👉 ไปหน้าใบเสร็จ
+    window.location.href = "index7.html";
+  }
+</script>
 
 </body>
 </html>
