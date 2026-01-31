@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>โอนเงินผ่านธนาคาร</title>
+
+<style>
+body{
+  margin:0;
+  font-family:sans-serif;
+  background:#f5f5f5;
+}
+.container{
+  max-width:480px;
+  margin:auto;
+  padding:16px;
+}
+h2{
+  text-align:center;
+}
+.card{
+  background:#fff;
+  padding:16px;
+  border-radius:12px;
+  margin-bottom:14px;
+}
+.bank-info p{
+  margin:6px 0;
+}
+.total{
+  display:flex;
+  justify-content:space-between;
+  font-size:18px;
+  font-weight:bold;
+}
+input[type="file"]{
+  width:100%;
+  margin-top:10px;
+}
+.preview{
+  margin-top:10px;
+  text-align:center;
+}
+.preview img{
+  max-width:100%;
+  border-radius:10px;
+}
+button{
+  width:100%;
+  padding:14px;
+  font-size:16px;
+  border:none;
+  border-radius:12px;
+  margin-top:10px;
+}
+.confirm{
+  background:#2ecc71;
+  color:#fff;
+}
+.back{
+  background:#aaa;
+  color:#fff;
+}
+.note{
+  font-size:13px;
+  color:#666;
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <h2>โอนเงินผ่านธนาคาร</h2>
+
+  <div class="card bank-info">
+    <p><strong>ธนาคาร:</strong> กสิกรไทย</p>
+    <p><strong>เลขบัญชี:</strong> 123-4-56789-0</p>
+    <p><strong>ชื่อบัญชี:</strong> Milk Mood Store</p>
+  </div>
+
+  <div class="card">
+    <div class="total">
+      <span>ยอดที่ต้องโอน</span>
+      <span>฿<span id="totalPrice">0</span></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <label><strong>แนบสลิปโอนเงิน</strong></label>
+    <input type="file" accept="image/*" id="slipInput">
+    <div class="preview" id="preview"></div>
+  </div>
+
+<button
+  onclick="confirmTransfer()"
+  style="background:#28a745;color:white;padding:14px;width:100%;
+         border:none;border-radius:8px;font-size:16px;font-weight:bold;">
+  ยืนยันการโอนเงิน
+</button>
+
+  <button class="back" onclick="goBack()">
+    กลับไปหน้าชำระเงิน
+  </button>
+
+  <p class="note">
+    * กรุณาโอนเงินตามยอดที่แสดง และแนบสลิปก่อนกดยืนยัน
+  </p>
+
+</div>
+
+<script>
+document.getElementById("totalPrice").innerText =
+  Number(localStorage.getItem("totalPrice") || 0).toFixed(2);
+
+let slipBase64 = "";
+
+// แสดงตัวอย่างรูป
+document.getElementById("slipInput").addEventListener("change", function(){
+  const file = this.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e){
+    slipBase64 = e.target.result;
+    document.getElementById("preview").innerHTML =
+      `<img src="${slipBase64}">`;
+  };
+  reader.readAsDataURL(file);
+});
+
+function confirmTransfer(){
+  if(!slipBase64){
+    alert("กรุณาแนบสลิปโอนเงินก่อนยืนยัน");
+    return;
+  }
+
+  let order = JSON.parse(localStorage.getItem("orderInfo")) || {};
+  order.paymentMethod = "bank";
+  order.paymentStatus = "paid";
+  order.slip = slipBase64;
+
+  localStorage.setItem("orderInfo", JSON.stringify(order));
+
+  alert("ยืนยันการโอนเงินเรียบร้อยแล้ว");
+  // ต่อไปอาจลิงก์ไปหน้าใบเสร็จ เช่น index7.html
+}
+
+function goBack(){
+  window.location.href = "index3.html";
+}
+</script>
+<script>
+function confirmTransfer() {
+  // ดึงข้อมูลออเดอร์เดิม (ถ้ามี)
+  let order = JSON.parse(localStorage.getItem("orderInfo")) || {};
+
+  // อัปเดตสถานะการชำระเงิน
+  order.paymentMethod = "โอนเงินผ่านธนาคาร";
+  order.paymentStatus = "ชำระเงินแล้ว";
+  order.paidAt = new Date().toLocaleString("th-TH");
+
+  // (ถ้ามีรูปสลิปเก็บไว้แล้ว)
+  // order.slipImage = "...";
+
+  // บันทึกกลับเข้า localStorage
+  localStorage.setItem("orderInfo", JSON.stringify(order));
+
+  // เด้งไปหน้าใบเสร็จ
+  window.location.href = "index7.html";
+}
+</script>
+
+</body>
+</html>

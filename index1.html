@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+ <html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Milk Mood Store</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #f2f2f2;
+    }
+
+    header {
+      background: linear-gradient(#000, #333);
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }  
+    nav {
+      display: flex;
+      justify-content: space-around;
+      background: #444;
+      color: #fff;
+      padding: 10px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .product-list {
+  display: flex;
+  flex-direction: column;   /* 👉 เรียงแนวตั้ง */
+  gap: 20px;                /* ระยะห่างระหว่างสินค้า */
+  max-width: 500px;
+  margin: auto;
+}
+
+.product {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.product img {
+  width: 120px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.product button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+  </style>
+</head>
+
+  
+<body>
+
+<header>
+  <h1>Milk Mood Store</h1>
+<p>สมาชิก: <span id="showUser"></span></p>
+
+<script>
+  // ดึงชื่อผู้ใช้
+  const username = localStorage.getItem("username");
+
+  if (!username) {
+    // ถ้าไม่ล็อกอิน กลับหน้า Login
+    window.location.href = "index.html";
+  } else {
+    document.getElementById("showUser").innerText = username;
+  }
+
+</script>
+</header>
+
+<nav>
+  <a href="index1.html">สินค้า</a>
+  <a href="index2.html">ตะกร้า</a>
+  <a href="index4.html">ข้อมูลสมาชิก</a>
+  <a href="index.html">Logout</a>
+</nav>
+<div class="product-list">
+
+  <div class="product">
+    <img src="https://image.uniqlo.com/UQ/ST3/AsianCommon/imagesgoods/473164/sub/goods_473164_sub14_3x4.jpg?width=494"Fine-knit Cardigan">
+    <h3>Fine-knit Cardigan</h3>
+    <p>ราคา ฿990.00</p>
+    <button onclick="addToCart('Fine-knit Cardigan', 990)"> เพิ่มลงตะกร้า </button>
+  </div>
+
+  <div class="product">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmmDYxW4-fIY9xuGWZ0pulJGrwDS7xxFGwgpi9Jflx3w&s=10" Rib-knit Cardigan">
+    <h3>Rib-knit Cardigan</h3>
+    <p>ราคา ฿899.00</p>
+    <button onclick="addToCart('Rib-knit Cardigan', 899)"> เพิ่มลงตะกร้า </button>
+  </div>
+
+  <div class="product">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSic_pkrfqUYOxQfmAs3Uov-V8iXVOPBQ-KARwVAJrgQ&s=10"SOUFFLE YARN V-neck Cardigan">
+    <h3>SOUFFLE YARN V-neck Cardigan</h3>
+    <p>ราคา ฿1,000.00</p>
+    <button onclick="addToCart('SOUFFLE YARN V-neck Cardigan', 1000)"> เพิ่มลงตะกร้า </button>
+  </div>
+
+  <div class="product">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQz-AYQYwcJiT18LscSqk8BVkNKhSfBFIaFgAepaRvy-2TgdVLoPHbWbci&s=10"Short & Cropped Cardigan">
+    <h3>Short & Cropped Cardigan</h3>
+    <p>ราคา ฿1,299.00</p>
+   <button onclick="addToCart('Short & Cropped Cardigan', 1299)"> เพิ่มลงตะกร้า </button>
+
+  <div class="product">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2D8bctHh4hMP3ap3YOcmMKsDcaqCkHCEzMVgTyzsj4X6uPfa6UGHMQ4k&s=10"URTHE // V-NECK Cardigan">
+    <h3>URTHE // V-NECKCardigan</h3>
+    <p>ราคา ฿1,299.00</p>
+   <button onclick="addToCart('URTHE // V-NECK Cardigan', 1299)"> เพิ่มลงตะกร้า </button>
+
+<script>
+function addToCart(name, price) {
+
+  // 1. ดึงตะกร้าเดิม (ถ้ายังไม่มีให้เป็น array ว่าง)
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+  // 2. เช็คว่าสินค้านี้มีอยู่แล้วไหม
+  let found = cart.find(item => item.name === name);
+
+  if (found) {
+    found.qty += 1; // มีแล้ว เพิ่มจำนวน
+  } else {
+    cart.push({
+      name: name,
+      price: price,
+      qty: 1
+    });
+  }
+
+  // 3. บันทึกกลับ
+  localStorage.setItem('cart', JSON.stringify(cart));
+
+  // ไปหน้าตะกร้า
+  window.location.href = 'index2.html';
+}
+</script>
+
+</body>
+</html>

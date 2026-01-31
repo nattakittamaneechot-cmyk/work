@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ข้อมูลสมาชิก</title>
+
+<style>
+body{
+  font-family: Tahoma, sans-serif;
+  background:#f5f5f5;
+  padding:20px;
+}
+.box{
+  background:#fff;
+  max-width:400px;
+  margin:auto;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,.1);
+}
+p{
+  font-size:16px;
+  margin:10px 0;
+}
+.password-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+button{
+  padding:6px 12px;
+  font-size:14px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+.btn-show{
+  background:#007bff;
+  color:#fff;
+}
+.btn-back{
+  width:100%;
+  margin-top:15px;
+  padding:12px;
+  background:#000;
+  color:#fff;
+  font-size:16px;
+  border-radius:8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>ข้อมูลสมาชิก</h2>
+
+  <p>ชื่อผู้ใช้: <span id="u"></span></p>
+  <p>เบอร์โทร: <span id="p"></span></p>
+
+  <div class="password-row">
+    <p>รหัสผ่าน: <span id="pw">••••••</span></p>
+    <button class="btn-show" onclick="togglePass()">ดู</button>
+  </div>
+
+  <button class="btn-back" onclick="goShop()">
+    กลับไปหน้าสินค้า
+  </button>
+</div>
+
+<script>
+const username = localStorage.getItem("username");
+const phone = localStorage.getItem("phone");
+const password = localStorage.getItem("password");
+
+document.getElementById("u").innerText = username || "-";
+document.getElementById("p").innerText = phone || "-";
+
+let show = false;
+function togglePass(){
+  const pw = document.getElementById("pw");
+  const btn = document.querySelector(".btn-show");
+
+  if(show){
+    pw.innerText = "••••••";
+    btn.innerText = "ดู";
+    show = false;
+  }else{
+    pw.innerText = password || "-";
+    btn.innerText = "ซ่อน";
+    show = true;
+  }
+}
+
+function goShop(){
+  window.location.href = "index1.html"; // หน้าแสดงสินค้า
+}
+</script>
+
+</body>
+</html>

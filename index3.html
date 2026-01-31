@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ชำระเงิน</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f7fb;
+      margin: 0;
+      padding: 15px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    label {
+      font-size: 14px;
+      margin-top: 10px;
+      display: block;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-top: 5px;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: none;
+      height: 80px;
+    }
+
+    .radio-group {
+      margin-top: 10px;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+
+    .radio-group input {
+      margin-right: 10px;
+    }
+
+    .total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    .confirm-btn {
+      background: #4CAF50;
+      color: #fff;
+    }
+
+    .back-btn {
+      background: #ccc;
+      color: #000;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>ข้อมูลการจัดส่ง</h2>
+
+  <div class="card">
+    <label>ชื่อ - นามสกุล</label>
+    <input type="text" id="fullname" placeholder="กรอกชื่อผู้รับ">
+
+    <label>เบอร์โทร</label>
+    <input type="tel" id="phone" placeholder="กรอกเบอร์โทร">
+
+    <label>ที่อยู่จัดส่ง</label>
+    <textarea id="address" placeholder="กรอกที่อยู่"></textarea>
+  </div>
+
+  <div class="card">
+    <h3>เลือกวิธีชำระเงิน</h3>
+
+    <div class="radio-group">
+      <label>
+        <input type="radio" name="payment" value="bank" checked>
+        โอนเงินผ่านธนาคาร
+      </label>
+
+      <label>
+        <input type="radio" name="payment" value="qr">
+        ชำระผ่าน QR Code
+      </label>
+    </div>
+
+    <div class="total">
+      <span>ยอดที่ต้องชำระ</span>
+      <span>฿<span id="totalPrice">0.00</span></span>
+    </div>
+  </div>
+
+  <button class="confirm-btn" onclick="confirmPayment()">ยืนยันการชำระเงิน</button>
+  <button class="back-btn" onclick="window.location.href='index2.html'">กลับไปหน้าตะกร้า</button>
+
+  <script>
+    // แสดงยอดรวม
+    document.getElementById("totalPrice").innerText =
+      Number(localStorage.getItem("totalPrice") || 0).toFixed(2);
+
+    function confirmPayment() {
+      const fullname = document.getElementById("fullname").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const address = document.getElementById("address").value.trim();
+
+      if (!fullname || !phone || !address) {
+        alert("กรุณากรอกข้อมูลให้ครบถ้วน");
+        return;
+      }
+
+      // เก็บข้อมูลลูกค้า
+      localStorage.setItem("customerName", fullname);
+      localStorage.setItem("customerPhone", phone);
+      localStorage.setItem("customerAddress", address);
+
+      // ตรวจสอบวิธีชำระเงิน
+      const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+
+      if (paymentMethod === "bank") {
+        window.location.href = "index5.html";
+      } else {
+        window.location.href = "index6.html";
+      }
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สมัครสมาชิก</title>
+
+<style>
+body{
+  font-family: Arial, Tahoma, sans-serif;
+  background:#f2f2f2;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  margin:0;
+}
+.login-box{
+  background:#fff;
+  width:100%;
+  max-width:360px;
+  padding:25px;
+  border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,.1);
+}
+h2{
+  text-align:center;
+  margin-bottom:20px;
+}
+input,button{
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:15px;
+}
+button{
+  background:#000;
+  color:#fff;
+  border:none;
+  font-size:16px;
+  cursor:pointer;
+}
+.error{
+  color:#e74c3c;
+  font-size:14px;
+  text-align:center;
+  margin-top:8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-box">
+  <h2>สมัครสมาชิก</h2>
+
+  <form onsubmit="register(); return false;">
+    <input type="text" id="username" placeholder="ชื่อผู้ใช้" required>
+    <input type="tel" id="phone" placeholder="เบอร์โทร (10 หลัก)" maxlength="10" required>
+    <input type="password" id="password" placeholder="รหัสผ่าน" required>
+
+    <div id="errorMsg" class="error"></div>
+
+    <button type="submit">สมัครสมาชิก</button>
+  </form>
+</div>
+
+<script>
+function register(){
+  const username = document.getElementById("username").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const errorMsg = document.getElementById("errorMsg");
+
+  errorMsg.innerText = "";
+
+  if(!username || !phone || !password){
+    errorMsg.innerText = "กรุณากรอกข้อมูลให้ครบ";
+    return;
+  }
+
+  if(phone.length !== 10){
+    errorMsg.innerText = "กรุณากรอกเบอร์โทร 10 หลัก";
+    return;
+  }
+
+  // ✅ บันทึกข้อมูล
+  localStorage.setItem("username", username);
+  localStorage.setItem("phone", phone);
+  localStorage.setItem("password", password);
+  localStorage.setItem("isLogin", "true");
+
+  // ไปหน้าหลักทันที (ไม่มี alert)
+  window.location.href = "index1.html";
+}
+</script>
+
+</body>
+</html>

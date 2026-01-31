@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ชำระเงินผ่าน QR Code</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f6f6;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 420px;
+      background: #fff;
+      margin: auto;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .amount {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .amount span {
+      font-weight: bold;
+      color: #2e7d32;
+    }
+
+    .qr {
+      text-align: center;
+      margin: 15px 0;
+    }
+
+    .qr img {
+      width: 220px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input[type="file"] {
+      margin-top: 8px;
+    }
+
+    #preview img {
+      margin-top: 10px;
+      max-width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .confirm {
+      background: #4caf50;
+      color: white;
+    }
+
+    .back {
+      background: #e0e0e0;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>ชำระเงินผ่าน QR Code</h2>
+
+  <div class="amount">
+    ยอดที่ต้องชำระ: <span id="totalPrice">0.00</span> บาท
+  </div>
+
+  <!-- 🔳 QR Code -->
+  <div class="qr">
+    <!-- เปลี่ยนรูป QR ได้ตามร้าน -->
+    <img src="https://promptpay.io/0902351343" alt="https://demo.test-payment.com">
+    <p>สแกนเพื่อชำระเงิน</p>
+  </div>
+
+  <!-- 📎 แนบสลิป -->
+  <label>แนบสลิปการโอนเงิน</label>
+  <input type="file" accept="image/*" onchange="uploadSlip(this)">
+
+  <div id="preview"></div>
+
+  <!-- ✅ ปุ่ม -->
+  <button class="btn confirm" onclick="confirmPayment()">ยืนยันการโอน</button>
+  <button class="btn back" onclick="goBack()">กลับไปเลือกวิธีชำระเงิน</button>
+</div>
+
+<script>
+  let slipBase64 = null;
+
+  function uploadSlip(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      slipBase64 = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function confirmPayment() {
+    if (!slipBase64) {
+      alert("กรุณาแนบสลิปก่อนยืนยันการโอน");
+      return;
+    }
+
+    let order = JSON.parse(localStorage.getItem("orderInfo")) || {};
+
+    order.paymentMethod = "QR Code";
+    order.paymentStatus = "ชำระเงินแล้ว";
+    order.slip = slipBase64;
+    order.orderDate = new Date().toLocaleString("th-TH");
+
+    localStorage.setItem("orderInfo", JSON.stringify(order));
+
+    // 👉 เด้งไปหน้าใบเสร็จทันที
+    window.location.href = "index7.html";
+  }
+
+  function goBack() {
+    window.location.href = "index3.html";
+  }
+</script>
+
+</body>
+</html>

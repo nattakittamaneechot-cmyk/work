@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ตะกร้าสินค้า</title>
+
+<style>
+body{
+  font-family:sans-serif;
+  margin:0;
+  background:#f5f5f5;
+}
+.container{
+  max-width:480px;
+  margin:auto;
+  padding:15px;
+}
+.item{
+  background:#fff;
+  padding:12px;
+  border-radius:10px;
+  margin-bottom:10px;
+}
+.item-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.qty-box{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:8px;
+}
+.icon-btn{
+  width:34px;
+  height:34px;
+  border:none;
+  border-radius:50%;
+  background:#eee;
+  font-size:18px;
+}
+.remove{
+  background:none;
+  border:none;
+  color:red;
+  font-size:18px;
+}
+.summary{
+  background:#fff;
+  padding:15px;
+  border-radius:10px;
+}
+.summary p{
+  display:flex;
+  justify-content:space-between;
+}
+.btn{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:10px;
+  margin-top:10px;
+  font-size:16px;
+}
+.btn-back{background:#aaa;color:#fff;}
+.btn-pay{background:#000;color:#fff;}
+</style>
+</head>
+
+<body>
+<div class="container">
+  <h2>ตะกร้าสินค้า</h2>
+
+  <div id="cartList"></div>
+
+  <div class="summary">
+    <p><span>ราคาสินค้า</span><span>฿<span id="sub">0</span></span></p>
+    <p><span>VAT 7%</span><span>฿<span id="vat">0</span></span></p>
+    <hr>
+    <p><strong>รวมทั้งหมด</strong><strong>฿<span id="total">0</span></strong></p>
+  </div>
+
+  <button class="btn btn-back" onclick="goBack()">
+    เลือกซื้อสินค้าต่อ
+  </button>
+
+  <button class="btn btn-pay" onclick="goCheckout()">
+    ไปชำระเงิน
+  </button>
+</div>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+function renderCart(){
+  const list = document.getElementById("cartList");
+  list.innerHTML="";
+  let sub=0;
+
+  cart.forEach((item,i)=>{
+    sub += item.price * item.qty;
+
+    list.innerHTML += `
+      <div class="item">
+        <div class="item-top">
+          <strong>${item.name}</strong>
+          <button class="remove" onclick="removeItem(${i})">🗑️</button>
+        </div>
+        <div>฿${item.price.toLocaleString()}</div>
+
+        <div class="qty-box">
+          <button class="icon-btn" onclick="changeQty(${i},-1)">➖</button>
+          <span>${item.qty}</span>
+          <button class="icon-btn" onclick="changeQty(${i},1)">➕</button>
+        </div>
+      </div>
+    `;
+  });
+
+  const vat = sub*0.07;
+  const total = sub+vat;
+
+  document.getElementById("sub").innerText=sub.toLocaleString();
+  document.getElementById("vat").innerText=vat.toFixed(2);
+  document.getElementById("total").innerText=total.toFixed(2);
+
+  localStorage.setItem("cart",JSON.stringify(cart));
+  localStorage.setItem("totalPrice",total);
+}
+
+function changeQty(i,val){
+  cart[i].qty += val;
+  if(cart[i].qty<1) cart[i].qty=1;
+  renderCart();
+}
+
+function removeItem(i){
+  cart.splice(i,1);
+  renderCart();
+}
+
+function goBack(){
+  window.location.href="index1.html";
+}
+function goCheckout(){
+  window.location.href="index3.html";
+}
+
+renderCart();
+</script>
+</body>
+</html>
