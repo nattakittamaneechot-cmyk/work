@@ -2,155 +2,128 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>ชำระเงินผ่าน QR Code</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ชำระเงินด้วย QR Code</title>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f6f6f6;
       margin: 0;
-      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
     }
 
     .container {
       max-width: 420px;
-      background: #fff;
       margin: auto;
+      padding: 16px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
       padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
     h2 {
       text-align: center;
-      margin-bottom: 15px;
+      margin-bottom: 16px;
     }
 
-    .amount {
+    .qr-box {
       text-align: center;
-      font-size: 18px;
-      margin-bottom: 15px;
     }
 
-    .amount span {
-      font-weight: bold;
-      color: #2e7d32;
-    }
-
-    .qr {
-      text-align: center;
-      margin: 15px 0;
-    }
-
-    .qr img {
-      width: 220px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-    }
-
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-
-    input[type="file"] {
-      margin-top: 8px;
-    }
-
-    #preview img {
-      margin-top: 10px;
-      max-width: 100%;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-
-    .btn {
+    .qr-box img {
       width: 100%;
-      padding: 12px;
-      margin-top: 15px;
+      max-width: 260px;
+      border-radius: 12px;
+    }
+
+    .total {
+      display: flex;
+      justify-content: space-between;
       font-size: 16px;
+      margin-top: 16px;
+      font-weight: bold;
+    }
+
+    .btn-confirm {
+      width: 100%;
+      background: #4CAF50;
+      color: #fff;
       border: none;
-      border-radius: 8px;
+      padding: 16px;
+      font-size: 16px;
+      border-radius: 14px;
       cursor: pointer;
+      margin-top: 20px;
     }
 
-    .confirm {
-      background: #4caf50;
-      color: white;
+    .btn-confirm:hover {
+      background: #43a047;
     }
 
-    .back {
-      background: #e0e0e0;
+    .back-btn {
+      width: 100%;
+      background: #ddd;
+      border: none;
+      padding: 14px;
+      font-size: 15px;
+      border-radius: 14px;
+      cursor: pointer;
+      margin-top: 10px;
     }
   </style>
 </head>
 
 <body>
 
-<div class="container">
-  <h2>ชำระเงินผ่าน QR Code</h2>
+  <div class="container">
 
-  <div class="amount">
-    ยอดที่ต้องชำระ: <span id="totalPrice">0.00</span> บาท
+    <div class="card">
+      <h2>สแกน QR เพื่อชำระเงิน</h2>
+
+      <div class="qr-box">
+        <!-- ใส่รูป QR ของคุณตรง src -->
+        <img src="qr.png" alt="QR Code">
+      </div>
+
+      <div class="total">
+        <span>ยอดที่ต้องชำระ</span>
+        <span>฿<span id="totalPrice">0.00</span></span>
+      </div>
+    </div>
+
+    <button class="btn-confirm" onclick="confirmPayment()">
+      ยืนยันการชำระเงิน
+    </button>
+
+    <button class="back-btn" onclick="window.location.href='index3.html'">
+      กลับไปหน้าเลือกวิธีชำระเงิน
+    </button>
+
   </div>
 
-  <!-- 🔳 QR Code -->
-  <div class="qr">
-    <!-- เปลี่ยนรูป QR ได้ตามร้าน -->
-    <img src="https://promptpay.io/0902351343" alt="https://demo.test-payment.com">
-    <p>สแกนเพื่อชำระเงิน</p>
-  </div>
+  <script>
+    // แสดงยอดเงิน
+    document.getElementById("totalPrice").innerText =
+      Number(localStorage.getItem("totalPrice") || 0).toFixed(2);
 
-  <!-- 📎 แนบสลิป -->
-  <label>แนบสลิปการโอนเงิน</label>
-  <input type="file" accept="image/*" onchange="uploadSlip(this)">
+    function confirmPayment() {
+      let order = JSON.parse(localStorage.getItem("orderInfo")) || {};
 
-  <div id="preview"></div>
+      order.paymentMethod = "qr";
+      order.paymentStatus = "paid";
+      order.orderDate = new Date().toLocaleString("th-TH");
 
-  <!-- ✅ ปุ่ม -->
-  <button class="btn confirm" onclick="confirmPayment()">ยืนยันการโอน</button>
-  <button class="btn back" onclick="goBack()">กลับไปเลือกวิธีชำระเงิน</button>
-</div>
+      localStorage.setItem("orderInfo", JSON.stringify(order));
 
-<script>
-  let slipBase64 = null;
-
-  function uploadSlip(input) {
-    const file = input.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      slipBase64 = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function confirmPayment() {
-    if (!slipBase64) {
-      alert("กรุณาแนบสลิปก่อนยืนยันการโอน");
-      return;
+      // 👉 เด้งไปหน้าใบเสร็จทันที
+      window.location.href = "index7.html";
     }
-
-    let order = JSON.parse(localStorage.getItem("orderInfo")) || {};
-
-    order.paymentMethod = "QR Code";
-    order.paymentStatus = "ชำระเงินแล้ว";
-    order.slip = slipBase64;
-    order.orderDate = new Date().toLocaleString("th-TH");
-
-    localStorage.setItem("orderInfo", JSON.stringify(order));
-
-    // 👉 เด้งไปหน้าใบเสร็จทันที
-    window.location.href = "index7.html";
-  }
-
-  function goBack() {
-    window.location.href = "index3.html";
-  }
-</script>
+  </script>
 
 </body>
 </html>
