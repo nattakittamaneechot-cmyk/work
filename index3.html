@@ -6,69 +6,88 @@
   <title>ชำระเงิน</title>
 
   <style>
-     {
-  box-sizing: border-box;
-}
-
 body {
-  margin: 0;
-  padding: 16px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont;
-  background: #f5f6fa;
-}
+      font-family: Arial, sans-serif;
+      background: #f6f7fb;
+      margin: 0;
+      padding: 15px;
+    }
 
-.card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 16px;
-}
+    h2 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
 
-.payment-option {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-  font-size: 16px;
-  line-height: 1.4;
-  word-break: break-word;
-}
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
 
-.payment-option span {
-  flex: 1;
-  white-space: normal; /* ⭐ สำคัญ */
-}
+    label {
+      font-size: 14px;
+      margin-top: 10px;
+      display: block;
+    }
 
-input[type="radio"] {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-}
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-top: 5px;
+      font-size: 14px;
+    }
 
-.total {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 16px;
-  font-size: 16px;
-}
+    textarea {
+      resize: none;
+      height: 80px;
+    }
 
-button {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: none;
-  font-size: 16px;
-}
+    .radio-group {
+      margin-top: 10px;
+    }
 
-.btn-confirm {
-  background: #4caf50;
-  color: #fff;
-  margin-bottom: 10px;
-}
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
 
-.btn-back {
-  background: #e0e0e0;
-}
+    .radio-group input {
+      margin-right: 10px;
+    }
+
+    .total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    .confirm-btn {
+      background: #4CAF50;
+      color: #fff;
+    }
+
+    .back-btn {
+      background: #ccc;
+      color: #000;
+    }
   </style>
 </head>
 
